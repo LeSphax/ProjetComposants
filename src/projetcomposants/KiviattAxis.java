@@ -8,6 +8,9 @@ package projetcomposants;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JLayeredPane;
 import javax.swing.table.TableModel;
 
@@ -35,19 +38,22 @@ public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
         value = (int) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN);
         valueMin = (int) model.getValueAt(axisIndex, IKiviatt.VALUE_MIN_COLUMN);
         valueMax = (int) model.getValueAt(axisIndex, IKiviatt.VALUE_MAX_COLUMN);
-        setValuePosition();
 
+        initListeners();
+
+        setValuePosition();
     }
 
     @Override
     public void paintComponent(Graphics _g) {
+        super.paintComponent(_g);
         Graphics2D g = (Graphics2D) _g;
         int xBorder = (int) Math.round(Math.cos(angle) * getWidth() / 2);
         int yBorder = (int) Math.round(Math.sin(angle) * getWidth() / 2);
         g.drawLine(getWidth() / 2, getWidth() / 2, xBorder, yBorder);
 
         g.drawRect(valuePosition.x - HALF_SIZE_INTERACTOR, valuePosition.y - HALF_SIZE_INTERACTOR,
-                valuePosition.x + HALF_SIZE_INTERACTOR, valuePosition.y + HALF_SIZE_INTERACTOR);
+                HALF_SIZE_INTERACTOR, HALF_SIZE_INTERACTOR);
     }
 
     @Override
@@ -65,6 +71,42 @@ public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
         int xPos = (int) Math.round(Math.cos(angle) * proportion * getWidth() / 2);
         int yPos = (int) Math.round(Math.sin(angle) * proportion * getWidth() / 2);
         valuePosition = new Point(xPos, yPos);
+    }
+
+    @Override
+    public boolean contains(Point p) {
+        if (p.x > valuePosition.x - HALF_SIZE_INTERACTOR && p.x < valuePosition.x + HALF_SIZE_INTERACTOR) {
+            if (p.y > valuePosition.y - HALF_SIZE_INTERACTOR && p.y < valuePosition.y + HALF_SIZE_INTERACTOR) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void initListeners() {
+
+        MouseListener adapter = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+        addMouseListener(null);
     }
 
 }
