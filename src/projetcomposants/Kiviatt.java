@@ -33,8 +33,9 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        if (e.getColumn() == TableModelEvent.ALL_COLUMNS) {
-            initAxis();
+        if (e.getColumn() == VALUE_COLUMN) {
+            axisTable[e.getFirstRow()].updateValue();
+            this.repaint();
         }
     }
 
@@ -46,7 +47,6 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
         int yPointsKiviatt[] = new int[axisTable.length];
 
         for (int i = 0; i < axisTable.length; i++) {
-            System.out.println(i);
             xPointsKiviatt[i] = axisTable[i].getValuePosition().x;
             yPointsKiviatt[i] = axisTable[i].getValuePosition().y;
             //System.out.println(xPointsKiviatt[i] + "   " + yPointsKiviatt[i]);
@@ -77,7 +77,6 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     private void initAxis() {
         axisTable = new KiviattAxis[model.getRowCount()];
 
-        //The first row is for the labels, hence the i=1;
         for (int i = 0; i < model.getRowCount(); i++) {
 
             double angle = 360 / (model.getRowCount()) * i;

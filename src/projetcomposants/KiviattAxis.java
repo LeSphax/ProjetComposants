@@ -45,7 +45,6 @@ public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
     @Override
     public void paintComponent(Graphics _g) {
         super.paintComponent(_g);
-
         Graphics2D g = (Graphics2D) _g;
         int xBorder = (int) Math.round(Math.cos(Math.toRadians(angle)) * getWidth() / 2) + getWidth() / 2;
         int yBorder = (int) Math.round(Math.sin(Math.toRadians(angle)) * getWidth() / 2) + getWidth() / 2;
@@ -114,6 +113,12 @@ public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
             }
         };
         addMouseListener(null);
+    }
+
+    void updateValue() {
+        value = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN));
+        System.out.println("New value : " + value);
+        setValuePosition();
     }
 
 }
