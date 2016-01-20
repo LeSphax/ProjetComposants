@@ -20,7 +20,7 @@ import javax.swing.table.TableModel;
  */
 public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
 
-    private static final int HALF_SIZE_INTERACTOR = 20;
+    private static final int SIZE_INTERACTOR = 20;
 
     private final int axisIndex;
     private final double angle;
@@ -35,25 +35,24 @@ public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
         this.axisIndex = axisIndex;
         this.angle = angle;
         this.model = model;
-        value = (int) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN);
-        valueMin = (int) model.getValueAt(axisIndex, IKiviatt.VALUE_MIN_COLUMN);
-        valueMax = (int) model.getValueAt(axisIndex, IKiviatt.VALUE_MAX_COLUMN);
+        value = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN));
+        valueMin = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MIN_COLUMN));
+        valueMax = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MAX_COLUMN));
 
         initListeners();
-
-        setValuePosition();
     }
 
     @Override
     public void paintComponent(Graphics _g) {
         super.paintComponent(_g);
+
         Graphics2D g = (Graphics2D) _g;
-        int xBorder = (int) Math.round(Math.cos(angle) * getWidth() / 2);
-        int yBorder = (int) Math.round(Math.sin(angle) * getWidth() / 2);
+        int xBorder = (int) Math.round(Math.cos(Math.toRadians(angle)) * getWidth() / 2) + getWidth() / 2;
+        int yBorder = (int) Math.round(Math.sin(Math.toRadians(angle)) * getWidth() / 2) + getWidth() / 2;
         g.drawLine(getWidth() / 2, getWidth() / 2, xBorder, yBorder);
 
-        g.drawRect(valuePosition.x - HALF_SIZE_INTERACTOR, valuePosition.y - HALF_SIZE_INTERACTOR,
-                HALF_SIZE_INTERACTOR, HALF_SIZE_INTERACTOR);
+        g.drawRect(valuePosition.x - SIZE_INTERACTOR / 2, valuePosition.y - SIZE_INTERACTOR / 2,
+                SIZE_INTERACTOR, SIZE_INTERACTOR);
     }
 
     @Override
@@ -67,16 +66,24 @@ public class KiviattAxis extends JLayeredPane implements IKiviattAxis {
     }
 
     private void setValuePosition() {
-        float proportion = value / (valueMax - valueMin);
-        int xPos = (int) Math.round(Math.cos(angle) * proportion * getWidth() / 2);
-        int yPos = (int) Math.round(Math.sin(angle) * proportion * getWidth() / 2);
+
+        float proportion = ((float) value) / (valueMax - valueMin);
+        int xPos = (int) Math.round(Math.cos(Math.toRadians(angle)) * proportion * getWidth() / 2) + getWidth() / 2;
+        int yPos = (int) Math.round(Math.sin(Math.toRadians(angle)) * proportion * getWidth() / 2) + getWidth() / 2;
         valuePosition = new Point(xPos, yPos);
+
+    }
+
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        super.setBounds(x, y, width, height);
+        setValuePosition();
     }
 
     @Override
     public boolean contains(Point p) {
-        if (p.x > valuePosition.x - HALF_SIZE_INTERACTOR && p.x < valuePosition.x + HALF_SIZE_INTERACTOR) {
-            if (p.y > valuePosition.y - HALF_SIZE_INTERACTOR && p.y < valuePosition.y + HALF_SIZE_INTERACTOR) {
+        if (p.x > valuePosition.x - SIZE_INTERACTOR && p.x < valuePosition.x + SIZE_INTERACTOR) {
+            if (p.y > valuePosition.y - SIZE_INTERACTOR && p.y < valuePosition.y + SIZE_INTERACTOR) {
                 return true;
             }
         }
