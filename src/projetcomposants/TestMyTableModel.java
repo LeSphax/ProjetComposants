@@ -46,10 +46,10 @@ public class TestMyTableModel extends JPanel {
         JFrame.setDefaultLookAndFeelDecorated(true);
         
         //Create and set up the window.
-        JFrame frame = new JFrame("TestMyTableModel");
+        JFrame frame = new JFrame("Test JTable MyTableModel");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        JFrame frame2 = new JFrame("TestMyTableModel");
+        JFrame frame2 = new JFrame("Test Kiviatt MyTableModel");
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         
@@ -70,5 +70,16 @@ public class TestMyTableModel extends JPanel {
         
         frame2.pack();
         frame2.setVisible(true);
+        
+        // Kiviatt with Default model
+        Kiviatt defaultKiviatt = new Kiviatt();
+        JFrame frame3 = new JFrame("Test Kiviatt DefaultModel");
+        frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        defaultKiviatt.setOpaque(true);
+        frame3.setContentPane(defaultKiviatt);
+        
+        frame3.pack();
+        frame3.setVisible(true);
     }
 }

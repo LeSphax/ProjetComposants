@@ -18,17 +18,37 @@ import javax.swing.table.TableModel;
  * @author kerbrase
  */
 public final class Kiviatt extends JLayeredPane implements TableModelListener, IKiviatt {
-
+    
+    private static final String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
+    private static final Object donnees[][] = {
+        {"c1", "10", "0", "30"},
+        {"c2", "20", "0", "30"},
+        {"c3", "30", "0", "30"}
+    };
+    private static final MyTableModel DEFAULT_MODEL = new MyTableModel(donnees, titres);
     private TableModelEvent currentData;
-    private final TableModel model;
+    private TableModel model;
 
     private KiviattAxis[] axisTable;
+    
+    public Kiviatt() {
+        this(DEFAULT_MODEL);
+    }
 
     public Kiviatt(TableModel model) {
+        super();
+        axisTable = new KiviattAxis[0];
         this.model = model;
         model.addTableModelListener(this);
-        axisTable = new KiviattAxis[0];
         initAxis();
+    }
+    
+    @Override
+    public void setModel(TableModel m){
+        this.model = m;
+        model.addTableModelListener(this);
+        initAxis();
+        repaint();
     }
 
     @Override
