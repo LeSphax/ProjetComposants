@@ -27,12 +27,16 @@ public class TestMyTableModel extends JPanel {
         {"c3", "30", "0", "50"},
         {"c4", "50", "0", "50"}
     };
+    static Kiviatt defaultKiviatt;
     
     TestMyTableModel(){        
         super(new GridLayout(1, 0));
         model = new MyTableModel(donnees, titres);
         JTable table = new JTable(model);
-        kiviatt = new Kiviatt(model);
+        kiviatt = new Kiviatt(model);        
+        defaultKiviatt = new Kiviatt();        
+        defaultKiviatt.setModel(model);
+        
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         
         JScrollPane scrollPane = new JScrollPane(table);
@@ -72,7 +76,6 @@ public class TestMyTableModel extends JPanel {
         frame2.setVisible(true);
         
         // Kiviatt with Default model
-        Kiviatt defaultKiviatt = new Kiviatt();
         JFrame frame3 = new JFrame("Test Kiviatt DefaultModel");
         frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
