@@ -5,6 +5,7 @@
 */
 package projetcomposants;
 
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 
@@ -12,24 +13,29 @@ import javax.swing.table.AbstractTableModel;
 class MyTableModel extends AbstractTableModel {
     private final boolean DEBUG = true;
     
-    Object donnees[][];
+    private List<Object[]> donnees;
     String titres[];
-    public MyTableModel(
-            Object donnees[][], String titres[]){
-        this.donnees = donnees;
+    public MyTableModel(List<Object[]> data, String titres[]){
+        this.donnees = data;
         this.titres = titres;
     }
     @Override
     public int getColumnCount(){
-        return donnees[0].length;
+        return titres.length;
     }
     @Override
     public Object getValueAt(int parm1, int parm2){
-        return donnees[parm1][parm2];
+        return donnees.get(parm1)[parm2];
     }
+    
+     public void addRow(String[] row) {
+        donnees.add(0,row);
+        fireTableRowsInserted(0, 0);
+    }
+     
     @Override
     public int getRowCount() {
-        return donnees.length;
+        return donnees.size();
     }
     @Override
     public String getColumnName(int col){
@@ -49,7 +55,7 @@ class MyTableModel extends AbstractTableModel {
                     + value.getClass() + ")");
         }
         
-        donnees[row][col] = value;
+        donnees.get(row)[col] = value;
         fireTableCellUpdated(row, col);
     }
 }

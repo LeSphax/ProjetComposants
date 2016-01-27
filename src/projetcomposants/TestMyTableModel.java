@@ -8,6 +8,8 @@ package projetcomposants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,23 +23,16 @@ public class TestMyTableModel extends JPanel {
     MyTableModel model;
     static Kiviatt kiviatt;
     String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
-    Object donnees[][] = {
-        {"c1", "7", "5", "10"},
-        {"c2", "5", "0", "7"},
-        {"c3", "10", "8", "22"},
-        {"c4", "556", "555", "557"},
-        {"c5", "10", "8", "22"},
-        {"c6", "10", "8", "22"},
-        {"c7", "10", "8", "22"},
-        
-        
-    };
+    private static final String l1[] = {"c1", "0", "0", "30"};
+    private static final String l2[] = {"c2", "10", "0", "30"};
+    private static final List<Object[]> donnees = Arrays.asList(l1,l2);
     static Kiviatt defaultKiviatt;
     
     TestMyTableModel(){        
         super(new GridLayout(1, 0));
         model = new MyTableModel(donnees, titres);
         JTable table = new JTable(model);
+        table.setSize(new Dimension(50, 20));
         kiviatt = new Kiviatt(model);        
         defaultKiviatt = new Kiviatt();        
         defaultKiviatt.setModel(model);
@@ -48,6 +43,8 @@ public class TestMyTableModel extends JPanel {
         
         add(scrollPane);        
     }
+    
+    
     
     public static void main(String[] args) {
         

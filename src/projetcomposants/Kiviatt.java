@@ -12,6 +12,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JLayeredPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -32,11 +35,12 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     private State state;
     
     private static final String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
-    private static final Object donnees[][] = {
-        {"c1", "10", "0", "30"},
-        {"c2", "20", "0", "30"},
-        {"c3", "30", "0", "30"}
-    };
+    private static final String l1[] = {"c1", "0", "0", "30"};
+    private static final String l2[] = {"c2", "10", "0", "30"};
+    private static final List<Object[]> donnees = Arrays.asList(
+        l1,
+        l2
+    );
     private static final MyTableModel DEFAULT_MODEL = new MyTableModel(donnees, titres);
     private TableModelEvent currentData;
     private TableModel model;
