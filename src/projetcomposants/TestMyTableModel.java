@@ -26,7 +26,11 @@ public class TestMyTableModel extends JPanel {
         {"c2", "5", "0", "7"},
         {"c3", "10", "8", "22"},
         {"c4", "556", "555", "557"},
-        {"c5", "3", "0", "12"}
+        {"c5", "10", "8", "22"},
+        {"c6", "10", "8", "22"},
+        {"c7", "10", "8", "22"},
+        
+        
     };
     static Kiviatt defaultKiviatt;
     
