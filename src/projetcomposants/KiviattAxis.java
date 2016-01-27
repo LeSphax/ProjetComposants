@@ -9,14 +9,13 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Label;
 import java.awt.Point;
 import javax.swing.JComponent;
 import javax.swing.table.TableModel;
 
 /**
  *
- * @author kerbrase
+ * @author kerbrase:
  */
 public class KiviattAxis extends JComponent {
 
@@ -30,7 +29,7 @@ public class KiviattAxis extends JComponent {
     private final int valueMax;
     private final int valueMin;
 
-    private Label label;
+    private String label;
     private int value;
     private Point valuePosition;
 
@@ -50,6 +49,7 @@ public class KiviattAxis extends JComponent {
         valueMin = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MIN_COLUMN));
         valueMax = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MAX_COLUMN));
         state = State.IDLE;
+        label = (String)model.getValueAt(axisIndex, IKiviatt.TITLE_COLUMN);
     }
 
     @Override
@@ -61,7 +61,26 @@ public class KiviattAxis extends JComponent {
         int xBorder = (int) Math.round(Math.cos(Math.toRadians(angle)) * getAxisSize() + getCenter().x);
         int yBorder = (int) Math.round(Math.sin(Math.toRadians(angle)) * getAxisSize() + getCenter().y);
         g.drawLine(getCenter().x, getCenter().y, xBorder, yBorder);
-
+        // titre
+        int decalage;
+        if (Math.cos(Math.toRadians(angle))<0){
+            decalage = 5+label.length()*10;
+        } else {
+            decalage = 18;
+        }
+        int xBorderTitle = (int) Math.round(Math.cos(Math.toRadians(angle)) * (getAxisSize()+decalage)) + getCenter().x ;
+        
+        if (Math.sin(Math.toRadians(angle))<=0){
+            decalage = 10;
+        } else {
+            decalage = 18;
+        }
+        int yBorderTitle = (int) Math.round(Math.sin(Math.toRadians(angle)) * (getAxisSize()+decalage)) + getCenter().y ;
+        g.drawString(label, xBorderTitle, yBorderTitle);
+        
+        // fin titre
+        
+        
         Point[][] marksPositions = getMarksPosition();
         for (int i = 0; i <= valueMax - valueMin; i++) {
             if (i == 0 || i == valueMax - valueMin) {
