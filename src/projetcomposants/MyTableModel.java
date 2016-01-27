@@ -38,10 +38,7 @@ class MyTableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable( int row, int col) {
-        if (col == Kiviatt.VALUE_COLUMN){
-            return true;
-        }
-        return false;
+        return true;
     }
     
     

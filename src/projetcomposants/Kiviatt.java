@@ -7,6 +7,7 @@ package projetcomposants;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,6 +27,7 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     enum State {
 
         IDLE,
+        MOUSEOVER,
         PRESSED,
     }
 
@@ -89,7 +91,8 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
 
         }
         g.drawPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
-        // g.fillPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
+        g.setColor(new Color(255,0,0,200));
+        g.fillPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
     }
 
     public void setModelPosition(int axis, int position) {
@@ -127,16 +130,10 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
             public void mousePressed(MouseEvent e) {
                 switch (state) {
                     case IDLE:
-                        activeAxisIndex = -1;
-                        for (int i = 0; i < axisTable.length; i++) {
-                            if (axisTable[i].contains(e.getPoint())) {
-                                activeAxisIndex = i;
-                            }
-                        }
-                        if (activeAxisIndex != -1) {
-                            state = State.PRESSED;
-                            axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
-                        }
+                        break;
+                    case MOUSEOVER:
+                        state = State.PRESSED;
+                        axisTable[activeAxisIndex].setOrthogonalProjectionValue(e.getPoint());
                         break;
                     case PRESSED:
                         //impossible
@@ -154,7 +151,7 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
                         break;
                     case PRESSED:
                         state = State.PRESSED;
-                        axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
+                        axisTable[activeAxisIndex].setOrthogonalProjectionValue(e.getPoint());
                         break;
                     default:
                         throw new AssertionError(state.name());
@@ -171,7 +168,8 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
                         break;
                     case PRESSED:
                         state = State.IDLE;
-                        axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
+                        axisTable[activeAxisIndex].setOrthogonalProjectionValue(e.getPoint());
+                        setDefaultCursor();
                         activeAxisIndex = -1;
                         break;
                     default:
@@ -180,18 +178,56 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
+            public void mouseMoved(MouseEvent e) {
+                //System.out.println("MOVED");
+                switch (state) {
+                    case IDLE:
+                        activeAxisIndex = -1;
+                        for (int i = 0; i < axisTable.length; i++) {
+                            if (axisTable[i].contains(e.getPoint())) {
+                                activeAxisIndex = i;
+                            }
+                        }
+                        if (activeAxisIndex != -1) {
+                            state = State.MOUSEOVER;
+                            setHandCursor();
+                        }
+                        break;
+                    case PRESSED:
+                        //impossible
+                        break;
+                    case MOUSEOVER:
+                        activeAxisIndex = -1;
+                        for (int i = 0; i < axisTable.length; i++) {
+                            if (axisTable[i].contains(e.getPoint())) {
+                                activeAxisIndex = i;
+                            }
+                        }
+                        if (activeAxisIndex != -1) {
+                            state = State.MOUSEOVER;
+                            setHandCursor();
+                        } else {
+                            state = State.IDLE;
+                            setDefaultCursor();
+                        }
+                        break;
+                    default:
+                        throw new AssertionError(state.name());
+                }
             }
 
         };
         addMouseListener(adapter);
         addMouseMotionListener(adapter);
+    }
+
+    private void setHandCursor() {
+        axisTable[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // axisTable[axisTable.length-1].setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    private void setDefaultCursor() {
+        axisTable[0].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
 }
