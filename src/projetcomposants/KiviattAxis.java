@@ -7,13 +7,10 @@ package projetcomposants;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Label;
 import java.awt.Point;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.table.TableModel;
 
 /**
@@ -22,10 +19,7 @@ import javax.swing.table.TableModel;
  */
 public class KiviattAxis extends JComponent {
 
-    private static final int SIZE_INTERACTOR = 10;
-    private static final int BORDER_OFFSET = 40;
-    private static final int SIZE_MARKS = 10;
-    private static final float AXIS_RATIO_MINIMUM = 0.1f;
+    private static final float AXIS_RATIO_MINIMUM = 0.2f;
 
     private static final BasicStroke MY_BASIC_STROKE = new BasicStroke(1);
 
@@ -97,8 +91,8 @@ public class KiviattAxis extends JComponent {
             // System.out.println(marksPositions[i][0] + "     " + marksPositions[i][1]);
             g.drawLine(marksPositions[i][0].x, marksPositions[i][0].y, marksPositions[i][1].x, marksPositions[i][1].y);
         }
-        g.fillOval(valuePosition.x - SIZE_INTERACTOR / 2, valuePosition.y - SIZE_INTERACTOR / 2,
-                SIZE_INTERACTOR, SIZE_INTERACTOR);
+        g.fillOval(valuePosition.x - getSizeInteractor() / 2, valuePosition.y - getSizeInteractor() / 2,
+                getSizeInteractor(), getSizeInteractor());
     }
 
     public Point getValuePosition() {
@@ -107,18 +101,16 @@ public class KiviattAxis extends JComponent {
 
     public void setValue(int newValue) {
         if (newValue < valueMin) {
-            this.value = valueMin;
+            newValue = valueMin;
         } else if (newValue > valueMax) {
-            this.value = valueMax;
-        } else {
-            this.value = newValue;
+            newValue = valueMax;
         }
-        refreshValuePosition();
+        model.setValueAt(Integer.toString(newValue), axisIndex, Kiviatt.VALUE_COLUMN);
     }
 
     private int getAxisSize() {
         int size = Math.min(getWidth(), getHeight());
-        return size / 2 - BORDER_OFFSET;
+        return size / 2 - getBorderOffset();
     }
 
     private Point getCenter() {
@@ -127,11 +119,15 @@ public class KiviattAxis extends JComponent {
 
     private void refreshValuePosition() {
 
-        float proportion = AXIS_RATIO_MINIMUM + (1 - AXIS_RATIO_MINIMUM) * (((float) value - valueMin) / (valueMax - valueMin));
+        valuePosition = computeValuePosition(value);
+        repaint();
+    }
+
+    private Point computeValuePosition(double myValue) {
+        float proportion = AXIS_RATIO_MINIMUM + (1 - AXIS_RATIO_MINIMUM) * (((float) myValue - valueMin) / (valueMax - valueMin));
         int xPos = (int) Math.round(Math.cos(Math.toRadians(angle)) * proportion * getAxisSize() + getCenter().x);
         int yPos = (int) Math.round(Math.sin(Math.toRadians(angle)) * proportion * getAxisSize() + getCenter().y);
-        valuePosition = new Point(xPos, yPos);
-        repaint();
+        return new Point(xPos, yPos);
     }
 
     private Point[][] getMarksPosition() {
@@ -152,27 +148,30 @@ public class KiviattAxis extends JComponent {
 
         Point[] markPositions = new Point[2];
 
-        xPos = markValuePosition.x + (int) Math.round(Math.cos(Math.toRadians(angle + 90)) * SIZE_MARKS / 2);
-        yPos = markValuePosition.y + (int) Math.round(Math.sin(Math.toRadians(angle + 90)) * SIZE_MARKS / 2);
+        xPos = markValuePosition.x + (int) Math.round(Math.cos(Math.toRadians(angle + 90)) * getSizeMarks() / 2);
+        yPos = markValuePosition.y + (int) Math.round(Math.sin(Math.toRadians(angle + 90)) * getSizeMarks() / 2);
         markPositions[0] = new Point(xPos, yPos);
 
-        xPos = markValuePosition.x + (int) Math.round(Math.cos(Math.toRadians(angle - 90)) * SIZE_MARKS / 2);
-        yPos = markValuePosition.y + (int) Math.round(Math.sin(Math.toRadians(angle - 90)) * SIZE_MARKS / 2);
+        xPos = markValuePosition.x + (int) Math.round(Math.cos(Math.toRadians(angle - 90)) * getSizeMarks() / 2);
+        yPos = markValuePosition.y + (int) Math.round(Math.sin(Math.toRadians(angle - 90)) * getSizeMarks() / 2);
         markPositions[1] = new Point(xPos, yPos);
-        System.out.println(Math.sin(Math.toRadians(angle - 90)) + "     " + Math.sin(Math.toRadians(angle + 90)));
-        System.out.println(angle + "   " + markPositions[0] + "     " + markPositions[1]);
+
         return markPositions;
     }
 
-    public void setOrthogonalValueProjection(Point point) {
+    public void setOrthogonalProjectionValue(Point point) {
 
-        double distCenterPoint = point.distance(getCenter()) - getAxisSize() * AXIS_RATIO_MINIMUM;
-
-        double angleProjection = angle - (Math.toDegrees((2 * Math.PI - Math.atan2(getCenter().y - point.y, point.x - getCenter().x))) % 360);
-        double distCenterValue = Math.cos(Math.toRadians(angleProjection)) * distCenterPoint;
-
-        int newValue = valueMin + (int) Math.round(distCenterValue / getAxisSize() * ((valueMax - valueMin)));
+        int newValue = (int) Math.round(orthogonalProjectionValue(point));
         setValue(newValue);
+    }
+
+    private double orthogonalProjectionValue(Point point) {
+        double distCenterPoint = point.distance(getCenter());
+        double angleProjection = angle - (Math.toDegrees((2 * Math.PI - Math.atan2(getCenter().y - point.y, point.x - getCenter().x))) % 360);
+        double distCenterValue = Math.cos(Math.toRadians(angleProjection)) * distCenterPoint - getAxisSize() * AXIS_RATIO_MINIMUM;
+        double newValue = (valueMin + distCenterValue / ((1 - AXIS_RATIO_MINIMUM) * getAxisSize()) * ((valueMax - valueMin)));
+
+        return newValue;
     }
 
     @Override
@@ -184,16 +183,30 @@ public class KiviattAxis extends JComponent {
     @Override
     public boolean contains(Point p) {
         super.contains(p);
-        if (p.distance(valuePosition) < SIZE_INTERACTOR / 2) {
-            return true;
+        double floatValue = orthogonalProjectionValue(p);
+        if (floatValue >= valueMin) {
+            Point orthogonalProjection = computeValuePosition(floatValue);
+            return p.distance(orthogonalProjection) < getSizeInteractor() / 2;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     void updateValue() {
         value = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN));
         refreshValuePosition();
+    }
+
+    private int getSizeInteractor() {
+        return 5 + Math.max(getWidth() / 100, getHeight() / 100);
+    }
+
+    private int getSizeMarks() {
+        return 2 + Math.max(getWidth() / 100, getHeight() / 100);
+    }
+
+    private int getBorderOffset() {
+        return 20 + Math.max(getWidth() / 100, getHeight() / 100);
     }
 
 }
