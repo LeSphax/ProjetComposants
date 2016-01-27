@@ -56,7 +56,6 @@ public class KiviattAxis extends JComponent {
     @Override
     public void paintComponent(Graphics _g) {
         super.paintComponent(_g);
-
         Graphics2D g = (Graphics2D) _g;
         g.setColor(Color.black);
         g.setStroke(new BasicStroke(1));
@@ -161,6 +160,11 @@ public class KiviattAxis extends JComponent {
         }
 
         return false;
+    }
+
+    void updateValue() {
+        value = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN));
+        refreshValuePosition();
     }
 
 }

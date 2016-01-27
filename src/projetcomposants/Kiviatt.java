@@ -30,26 +30,47 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     }
 
     private State state;
-
+    
+    private static final String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
+    private static final Object donnees[][] = {
+        {"c1", "10", "0", "30"},
+        {"c2", "20", "0", "30"},
+        {"c3", "30", "0", "30"}
+    };
+    private static final MyTableModel DEFAULT_MODEL = new MyTableModel(donnees, titres);
     private TableModelEvent currentData;
-    private final TableModel model;
+    private TableModel model;
 
     private KiviattAxis[] axisTable;
     private int activeAxisIndex;
+    
+    public Kiviatt() {
+        this(DEFAULT_MODEL);
+    }
 
     public Kiviatt(TableModel model) {
+        super();
+        axisTable = new KiviattAxis[0];
         this.model = model;
         model.addTableModelListener(this);
-        axisTable = new KiviattAxis[0];
         initAxis();
         initListeners();
         state = State.IDLE;
     }
+    
+    @Override
+    public void setModel(TableModel m){
+        this.model = m;
+        model.addTableModelListener(this);
+        initAxis();
+        repaint();
+    }
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        if (e.getColumn() == TableModelEvent.ALL_COLUMNS) {
-            initAxis();
+        if (e.getColumn() == VALUE_COLUMN) {
+            axisTable[e.getFirstRow()].updateValue();
+            this.repaint();
         }
     }
 
@@ -91,7 +112,6 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     private void initAxis() {
         axisTable = new KiviattAxis[model.getRowCount()];
 
-        //The first row is for the labels, hence the i=1;
         for (int i = 0; i < model.getRowCount(); i++) {
 
             double angle = 360 / (model.getRowCount()) * i;
