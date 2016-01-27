@@ -20,18 +20,40 @@ import javax.swing.table.TableModel;
 public class KiviattAxis extends JComponent {
 
     private static final float AXIS_RATIO_MINIMUM = 0.2f;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 30;
 
     private static final BasicStroke MY_BASIC_STROKE = new BasicStroke(1);
 
     private final int axisIndex;
     private final double angle;
     private final TableModel model;
-    private final int valueMax;
-    private final int valueMin;
+    private int valueMax;
+    private int valueMin;
 
     private String label;
     private int value;
     private Point valuePosition;
+
+    void updateValueMax() {
+        valueMax = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MAX_COLUMN));
+        if (valueMax > MAX_VALUE) {
+            model.setValueAt(Integer.toString(MAX_VALUE), axisIndex, IKiviatt.VALUE_MAX_COLUMN);
+        } else if (valueMax < MIN_VALUE) {
+            model.setValueAt(Integer.toString(MIN_VALUE), axisIndex, IKiviatt.VALUE_MAX_COLUMN);
+        }
+        refreshValuePosition();
+    }
+
+    void updateValueMin() {
+        valueMin = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MIN_COLUMN));
+        if (valueMin > MAX_VALUE) {
+            model.setValueAt(Integer.toString(MAX_VALUE), axisIndex, IKiviatt.VALUE_MIN_COLUMN);
+        } else if (valueMin < MIN_VALUE) {
+            model.setValueAt(Integer.toString(MIN_VALUE), axisIndex, IKiviatt.VALUE_MIN_COLUMN);
+        }
+        refreshValuePosition();
+    }
 
     enum State {
 
@@ -87,7 +109,6 @@ public class KiviattAxis extends JComponent {
             } else {
                 g.setStroke(MY_BASIC_STROKE);
             }
-            // System.out.println(marksPositions[i][0] + "     " + marksPositions[i][1]);
             g.drawLine(marksPositions[i][0].x, marksPositions[i][0].y, marksPositions[i][1].x, marksPositions[i][1].y);
         }
         g.fillOval(valuePosition.x - getSizeInteractor() / 2, valuePosition.y - getSizeInteractor() / 2,
@@ -193,6 +214,11 @@ public class KiviattAxis extends JComponent {
 
     void updateValue() {
         value = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_COLUMN));
+        if (value > MAX_VALUE) {
+            model.setValueAt(Integer.toString(MAX_VALUE), axisIndex, IKiviatt.VALUE_COLUMN);
+        } else if (value < MIN_VALUE) {
+            model.setValueAt(Integer.toString(MIN_VALUE), axisIndex, IKiviatt.VALUE_COLUMN);
+        }
         refreshValuePosition();
     }
 

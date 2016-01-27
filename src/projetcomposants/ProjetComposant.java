@@ -5,6 +5,8 @@
  */
 package projetcomposants;
 
+import java.awt.Color;
+
 /**
  *
  * @author frinar
@@ -16,7 +18,6 @@ public class ProjetComposant extends javax.swing.JFrame {
      */
     public ProjetComposant() {
         initComponents();
-         kiviatt1.setModel(myInterface1.getModel());
     }
 
     /**
@@ -29,25 +30,26 @@ public class ProjetComposant extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        myInterface1 = new projetcomposants.TableManager();
-        kiviatt1 = new projetcomposants.Kiviatt();
+        tableManager1 = new projetcomposants.TableManager();
+        kiviatt2 = new projetcomposants.Kiviatt();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jSplitPane1.setDividerLocation(700);
         jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setPreferredSize(new java.awt.Dimension(1000, 1000));
+        jSplitPane1.setRightComponent(tableManager1);
 
-        myInterface1.setMaximumSize(new java.awt.Dimension(300, 12044042));
-        myInterface1.setPreferredSize(new java.awt.Dimension(200, 300));
-        jSplitPane1.setRightComponent(myInterface1);
-        jSplitPane1.setLeftComponent(kiviatt1);
+        kiviatt2.setModel(tableManager1.getModel());
+        kiviatt2.setMyColor(new Color(0,0,255,200));
+        kiviatt2.setMyOpacity(100);
+        jSplitPane1.setLeftComponent(kiviatt2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1033, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,7 +99,7 @@ public class ProjetComposant extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane1;
-    private projetcomposants.Kiviatt kiviatt1;
-    private projetcomposants.TableManager myInterface1;
+    private projetcomposants.Kiviatt kiviatt2;
+    private projetcomposants.TableManager tableManager1;
     // End of variables declaration//GEN-END:variables
 }

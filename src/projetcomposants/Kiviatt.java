@@ -27,6 +27,34 @@ import javax.swing.table.TableModel;
  */
 public final class Kiviatt extends JLayeredPane implements TableModelListener, IKiviatt {
 
+    /**
+     * @return the myColor
+     */
+    public Color getMyColor() {
+        return myColor;
+    }
+
+    /**
+     * @param myColor the myColor to set
+     */
+    public void setMyColor(Color myColor) {
+        this.myColor = myColor;
+    }
+
+    /**
+     * @return the transparency
+     */
+    public int getMyOpacity() {
+        return myOpacity;
+    }
+
+    /**
+     * @param transparency the transparency to set
+     */
+    public void setMyOpacity(int transparency) {
+        this.myOpacity = transparency;
+    }
+
     enum State {
 
         IDLE,
@@ -47,6 +75,9 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     private TableModelEvent currentData;
     private TableModel model;
 
+    private Color myColor;
+    private int myOpacity;
+
     private KiviattAxis[] axisTable;
     private int activeAxisIndex;
 
@@ -56,6 +87,7 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
 
     public Kiviatt(TableModel model) {
         super();
+        myColor = DEFAULT_COLOR;
         axisTable = new KiviattAxis[0];
         this.model = model;
         model.addTableModelListener(this);
@@ -78,6 +110,14 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
             axisTable[e.getFirstRow()].updateValue();
             this.repaint();
         }
+        if (e.getColumn() == VALUE_MAX_COLUMN) {
+            axisTable[e.getFirstRow()].updateValueMax();
+            this.repaint();
+        }
+        if (e.getColumn() == VALUE_MIN_COLUMN) {
+            axisTable[e.getFirstRow()].updateValueMin();
+            this.repaint();
+        }
         if (e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE) {
             initAxis();
             repaint();
@@ -98,8 +138,8 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
             yPointsKiviatt[i] = axisTable[i].getValuePosition().y;
 
         }
-        g.drawPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
-        g.setColor(new Color(255, 0, 0, 200));
+        Color color = new Color(getMyColor().getRed(), getMyColor().getGreen(), getMyColor().getBlue(), myOpacity);
+        g.setColor(color);
         g.fillPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
     }
 
@@ -127,7 +167,6 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
         for (int i = 0; i < model.getRowCount(); i++) {
 
             double angle = (double) 360 / (model.getRowCount()) * i;
-            System.out.println(angle);
             axisTable[i] = new KiviattAxis(i, angle, model);
             add(axisTable[i]);
         }

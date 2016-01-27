@@ -5,6 +5,7 @@
  */
 package projetcomposants;
 
+import java.awt.Color;
 import javax.swing.table.TableModel;
 
 /**
@@ -12,6 +13,7 @@ import javax.swing.table.TableModel;
  * @author kerbrase
  */
 public interface IKiviatt {
+
     public static final int TITLE_COLUMN = 0;
     public static final int VALUE_COLUMN = 1;
     public static final int VALUE_MIN_COLUMN = 2;
@@ -19,6 +21,9 @@ public interface IKiviatt {
 
     public static final int PREFERRED_SIZE = 300;
 
+    public static final Color DEFAULT_COLOR = new Color(255, 0, 0, 200);
+
     public void setModel(TableModel model);
+    
 
 }

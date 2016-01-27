@@ -27,7 +27,7 @@ public class TableManager extends JPanel {
     private static final String l1[] = {"c1", "0", "0", "30"};
     private static final String l2[] = {"c2", "10", "0", "30"};
     private String newRow[];
-    private List<Object[]> donnees = new ArrayList();
+    private final List<Object[]> donnees = new ArrayList();
     MyTableModel model;
     JTable table;
     JOptionPane d = new JOptionPane();
@@ -50,7 +50,7 @@ public class TableManager extends JPanel {
         donnees.add(l2);
         model = new MyTableModel(donnees, titres);
         table = new JTable(model);
-       // new NewJFrame1(model).setVisible(true);
+        // new NewJFrame1(model).setVisible(true);
         //kiviatt = new Kiviatt(model);
         /*
          JLayeredPane layeredPane = getLayeredPane();
@@ -59,24 +59,20 @@ public class TableManager extends JPanel {
         final JButton addButton = new JButton("Add row");
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                /*
-                 newRow = new String[titres.length];
-                 for(int i=0 ; i<titres.length ; i++){
-                 newRow[i] = d.showInputDialog("Entrez " + titres[i]);  
-                 }
-                 List<Object[]> newDonnees = new ArrayList(Arrays.asList(l1,l2));
-                 table.setModel(new MyTableModel(newDonnees, titres));
-                 */
-                newRow =  new String[]{"c2", "10", "0", "30"};
-                /*for (int i = 0; i < model.getColumnCount(); i++) {
-                    newRow[i] = d.showInputDialog("Entrez " + titres[i]);
-                }*/
-                model.addRow(newRow);
-
-            }
+        addButton.addActionListener((ActionEvent event) -> {
+            /*
+             newRow = new String[titres.length];
+             for(int i=0 ; i<titres.length ; i++){
+             newRow[i] = d.showInputDialog("Entrez " + titres[i]);
+             }
+             List<Object[]> newDonnees = new ArrayList(Arrays.asList(l1,l2));
+             table.setModel(new MyTableModel(newDonnees, titres));
+             */
+            newRow = new String[]{"c2", "10", Integer.toString(KiviattAxis.MIN_VALUE), Integer.toString(KiviattAxis.MAX_VALUE)};
+            /*for (int i = 0; i < model.getColumnCount(); i++) {
+             newRow[i] = d.showInputDialog("Entrez " + titres[i]);
+             }*/
+            model.addRow(newRow);
         });
         add(addButton, BorderLayout.SOUTH);
     }
