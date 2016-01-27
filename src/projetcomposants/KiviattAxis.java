@@ -18,12 +18,12 @@ import javax.swing.table.TableModel;
 
 /**
  *
- * @author kerbrase
+ * @author kerbrase:
  */
 public class KiviattAxis extends JComponent {
 
     private static final int SIZE_INTERACTOR = 10;
-    private static final int BORDER_OFFSET = 30;
+    private static final int BORDER_OFFSET = 40;
     private static final int SIZE_MARKS = 10;
     private static final float AXIS_RATIO_MINIMUM = 0.1f;
 
@@ -77,7 +77,7 @@ public class KiviattAxis extends JComponent {
         int xBorderTitle = (int) Math.round(Math.cos(Math.toRadians(angle)) * (getAxisSize()+decalage)) + getCenter().x ;
         
         if (Math.sin(Math.toRadians(angle))<=0){
-            decalage = 5;
+            decalage = 10;
         } else {
             decalage = 18;
         }
