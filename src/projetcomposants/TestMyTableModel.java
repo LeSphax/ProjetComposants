@@ -22,10 +22,11 @@ public class TestMyTableModel extends JPanel {
     static Kiviatt kiviatt;
     String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
     Object donnees[][] = {
-        {"c1", "10", "0", "50"},
-        {"c2", "20", "0", "50"},
-        {"c3", "30", "0", "50"},
-        {"c4", "50", "0", "50"}
+        {"c1", "7", "5", "10"},
+        {"c2", "5", "0", "7"},
+        {"c3", "10", "8", "22"},
+        {"c4", "556", "555", "557"},
+        {"c5", "3", "0", "12"}
     };
     
     TestMyTableModel(){        

@@ -14,5 +14,5 @@ public interface IKiviatt {
         public static final int VALUE_MIN_COLUMN = 2;
         public static final int VALUE_MAX_COLUMN = 3;
        
-        public static final int PREFERRED_SIZE = 300;
+        public static final int PREFERRED_SIZE = 400;
 }

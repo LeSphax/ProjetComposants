@@ -5,9 +5,13 @@
  */
 package projetcomposants;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JLayeredPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -19,16 +23,27 @@ import javax.swing.table.TableModel;
  */
 public final class Kiviatt extends JLayeredPane implements TableModelListener, IKiviatt {
 
+    enum State {
+
+        IDLE,
+        PRESSED,
+    }
+
+    private State state;
+
     private TableModelEvent currentData;
     private final TableModel model;
 
     private KiviattAxis[] axisTable;
+    private int activeAxisIndex;
 
     public Kiviatt(TableModel model) {
         this.model = model;
         model.addTableModelListener(this);
         axisTable = new KiviattAxis[0];
         initAxis();
+        initListeners();
+        state = State.IDLE;
     }
 
     @Override
@@ -42,29 +57,28 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     public void paintComponent(Graphics _g) {
         super.paintComponent(_g);
         Graphics2D g = (Graphics2D) _g;
+        g.setColor(Color.red);
+        g.setStroke(new BasicStroke(2));
         int xPointsKiviatt[] = new int[axisTable.length];
         int yPointsKiviatt[] = new int[axisTable.length];
 
         for (int i = 0; i < axisTable.length; i++) {
-            System.out.println(i);
             xPointsKiviatt[i] = axisTable[i].getValuePosition().x;
             yPointsKiviatt[i] = axisTable[i].getValuePosition().y;
-            //System.out.println(xPointsKiviatt[i] + "   " + yPointsKiviatt[i]);
-            
+
         }
         g.drawPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
-       // g.fillPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
+        // g.fillPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
     }
 
     public void setModelPosition(int axis, int position) {
         model.setValueAt(position, axis, VALUE_COLUMN);
     }
-    
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(PREFERRED_SIZE, PREFERRED_SIZE);
     }
-    
 
     @Override
     public void setBounds(int x, int y, int width, int height) {
@@ -84,6 +98,80 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
             axisTable[i] = new KiviattAxis(i, angle, model);
             add(axisTable[i]);
         }
+    }
+
+    private void initListeners() {
+
+        MouseAdapter adapter = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                switch (state) {
+                    case IDLE:
+                        activeAxisIndex = -1;
+                        for (int i = 0; i < axisTable.length; i++){
+                            if (axisTable[i].contains(e.getPoint())){
+                                activeAxisIndex = i;
+                            }
+                        }
+                        if (activeAxisIndex != -1){
+                            state = State.PRESSED;
+                            axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
+                        }
+                        break;
+                    case PRESSED:
+                        //impossible
+                        break;
+                    default:
+                        throw new AssertionError(state.name());
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                switch (state) {
+                    case IDLE:
+                        //impossible
+                        break;
+                    case PRESSED:
+                        state = State.PRESSED;
+                        axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
+                        break;
+                    default:
+                        throw new AssertionError(state.name());
+
+                }
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                switch (state) {
+                    case IDLE:
+                        //impossible
+                        break;
+                    case PRESSED:
+                        state = State.IDLE;
+                        axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
+                        activeAxisIndex = -1;
+                        break;
+                    default:
+                        throw new AssertionError(state.name());
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
+        };
+        addMouseListener(adapter);
+        addMouseMotionListener(adapter);
     }
 
 }
