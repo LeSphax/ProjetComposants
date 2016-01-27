@@ -19,7 +19,7 @@ import javax.swing.JTable;
  *
  * @author root
  */
-public class TestMyTableModel extends JPanel {
+public class MultiView extends JPanel {
 
     MyTableModel model;
     static Kiviatt kiviatt;
@@ -34,7 +34,7 @@ public class TestMyTableModel extends JPanel {
     String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
     static Kiviatt defaultKiviatt;
 
-    TestMyTableModel() {
+    MultiView() {
         super(new GridLayout(1, 0));
         model = new MyTableModel(donnees, titres);
         JTable table = new JTable(model);
@@ -62,7 +62,7 @@ public class TestMyTableModel extends JPanel {
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
-        TestMyTableModel newContentPane = new TestMyTableModel();
+        MultiView newContentPane = new MultiView();
         newContentPane.setOpaque(true);
         frame.setContentPane(newContentPane);
 

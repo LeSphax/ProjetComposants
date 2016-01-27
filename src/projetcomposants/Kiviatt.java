@@ -40,8 +40,8 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     private static final String l1[] = {"c1", "0", "0", "30"};
     private static final String l2[] = {"c2", "10", "0", "30"};
     private static final List<Object[]> donnees = Arrays.asList(
-        l1,
-        l2
+            l1,
+            l2
     );
     private static final MyTableModel DEFAULT_MODEL = new MyTableModel(donnees, titres);
     private TableModelEvent currentData;
@@ -78,11 +78,15 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
             axisTable[e.getFirstRow()].updateValue();
             this.repaint();
         }
+        if (e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE) {
+            initAxis();
+            repaint();
+        }
     }
 
     @Override
-    public void paintComponent(Graphics _g) {
-        super.paintComponent(_g);
+    public void paint(Graphics _g) {
+        super.paint(_g);
         Graphics2D g = (Graphics2D) _g;
         g.setColor(Color.red);
         g.setStroke(new BasicStroke(2));
@@ -95,7 +99,7 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
 
         }
         g.drawPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
-        g.setColor(new Color(255,0,0,200));
+        g.setColor(new Color(255, 0, 0, 200));
         g.fillPolygon(xPointsKiviatt, yPointsKiviatt, xPointsKiviatt.length);
     }
 
@@ -117,14 +121,17 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     }
 
     private void initAxis() {
+        removeAll();
         axisTable = new KiviattAxis[model.getRowCount()];
 
         for (int i = 0; i < model.getRowCount(); i++) {
 
-            double angle = 360 / (model.getRowCount()) * i;
+            double angle = (double) 360 / (model.getRowCount()) * i;
+            System.out.println(angle);
             axisTable[i] = new KiviattAxis(i, angle, model);
             add(axisTable[i]);
         }
+        setBounds(getX(), getY(), getWidth(), getHeight());
     }
 
     private void initListeners() {

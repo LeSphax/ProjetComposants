@@ -49,12 +49,13 @@ public class KiviattAxis extends JComponent {
         valueMin = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MIN_COLUMN));
         valueMax = Integer.parseInt((String) model.getValueAt(axisIndex, IKiviatt.VALUE_MAX_COLUMN));
         state = State.IDLE;
-        label = (String)model.getValueAt(axisIndex, IKiviatt.TITLE_COLUMN);
+        label = (String) model.getValueAt(axisIndex, IKiviatt.TITLE_COLUMN);
+        refreshValuePosition();
     }
 
     @Override
-    public void paintComponent(Graphics _g) {
-        super.paintComponent(_g);
+    public void paint(Graphics _g) {
+        super.paint(_g);
         Graphics2D g = (Graphics2D) _g;
         g.setColor(Color.black);
         g.setStroke(MY_BASIC_STROKE);
@@ -63,24 +64,22 @@ public class KiviattAxis extends JComponent {
         g.drawLine(getCenter().x, getCenter().y, xBorder, yBorder);
         // titre
         int decalage;
-        if (Math.cos(Math.toRadians(angle))<0){
-            decalage = 5+label.length()*10;
+        if (Math.cos(Math.toRadians(angle)) < 0) {
+            decalage = 5 + label.length() * 10;
         } else {
             decalage = 18;
         }
-        int xBorderTitle = (int) Math.round(Math.cos(Math.toRadians(angle)) * (getAxisSize()+decalage)) + getCenter().x ;
-        
-        if (Math.sin(Math.toRadians(angle))<=0){
+        int xBorderTitle = (int) Math.round(Math.cos(Math.toRadians(angle)) * (getAxisSize() + decalage)) + getCenter().x;
+
+        if (Math.sin(Math.toRadians(angle)) <= 0) {
             decalage = 10;
         } else {
             decalage = 18;
         }
-        int yBorderTitle = (int) Math.round(Math.sin(Math.toRadians(angle)) * (getAxisSize()+decalage)) + getCenter().y ;
+        int yBorderTitle = (int) Math.round(Math.sin(Math.toRadians(angle)) * (getAxisSize() + decalage)) + getCenter().y;
         g.drawString(label, xBorderTitle, yBorderTitle);
-        
+
         // fin titre
-        
-        
         Point[][] marksPositions = getMarksPosition();
         for (int i = 0; i <= valueMax - valueMin; i++) {
             if (i == 0 || i == valueMax - valueMin) {
@@ -206,7 +205,7 @@ public class KiviattAxis extends JComponent {
     }
 
     private int getBorderOffset() {
-        return 20 + Math.max(getWidth() / 100, getHeight() / 100);
+        return 30 + Math.max(getWidth() / 100, getHeight() / 100);
     }
 
 }

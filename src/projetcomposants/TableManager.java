@@ -21,7 +21,7 @@ import javax.swing.table.TableModel;
  *
  * @author frinar
  */
-public class MyInterface extends JPanel {
+public class TableManager extends JPanel {
 
     private static final String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
     private static final String l1[] = {"c1", "0", "0", "30"};
@@ -34,7 +34,7 @@ public class MyInterface extends JPanel {
     Kiviatt kiviatt;
 
     public static void main(String[] args) {
-        MyInterface ra = new MyInterface();
+        TableManager ra = new TableManager();
         //ra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ra.setSize(400, 300);
         ra.setVisible(true);
@@ -44,11 +44,13 @@ public class MyInterface extends JPanel {
         return model;
     }
 
-    public MyInterface() {
+    public TableManager() {
         donnees.add(l1);
+        donnees.add(l2);
         donnees.add(l2);
         model = new MyTableModel(donnees, titres);
         table = new JTable(model);
+       // new NewJFrame1(model).setVisible(true);
         //kiviatt = new Kiviatt(model);
         /*
          JLayeredPane layeredPane = getLayeredPane();
@@ -68,10 +70,10 @@ public class MyInterface extends JPanel {
                  List<Object[]> newDonnees = new ArrayList(Arrays.asList(l1,l2));
                  table.setModel(new MyTableModel(newDonnees, titres));
                  */
-                newRow = new String[model.getColumnCount()];
-                for (int i = 0; i < model.getColumnCount(); i++) {
+                newRow =  new String[]{"c2", "10", "0", "30"};
+                /*for (int i = 0; i < model.getColumnCount(); i++) {
                     newRow[i] = d.showInputDialog("Entrez " + titres[i]);
-                }
+                }*/
                 model.addRow(newRow);
 
             }
