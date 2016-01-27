@@ -30,7 +30,7 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
     }
 
     private State state;
-    
+
     private static final String titres[] = {"Critere", "Valeur", "Vmin", "Vmax"};
     private static final Object donnees[][] = {
         {"c1", "10", "0", "30"},
@@ -43,7 +43,7 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
 
     private KiviattAxis[] axisTable;
     private int activeAxisIndex;
-    
+
     public Kiviatt() {
         this(DEFAULT_MODEL);
     }
@@ -57,9 +57,9 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
         initListeners();
         state = State.IDLE;
     }
-    
+
     @Override
-    public void setModel(TableModel m){
+    public void setModel(TableModel m) {
         this.model = m;
         model.addTableModelListener(this);
         initAxis();
@@ -128,12 +128,12 @@ public final class Kiviatt extends JLayeredPane implements TableModelListener, I
                 switch (state) {
                     case IDLE:
                         activeAxisIndex = -1;
-                        for (int i = 0; i < axisTable.length; i++){
-                            if (axisTable[i].contains(e.getPoint())){
+                        for (int i = 0; i < axisTable.length; i++) {
+                            if (axisTable[i].contains(e.getPoint())) {
                                 activeAxisIndex = i;
                             }
                         }
-                        if (activeAxisIndex != -1){
+                        if (activeAxisIndex != -1) {
                             state = State.PRESSED;
                             axisTable[activeAxisIndex].setOrthogonalValueProjection(e.getPoint());
                         }

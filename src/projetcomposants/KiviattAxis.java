@@ -85,13 +85,11 @@ public class KiviattAxis extends JComponent {
 
     public void setValue(int newValue) {
         if (newValue < valueMin) {
-            this.value = valueMin;
+            newValue = valueMin;
         } else if (newValue > valueMax) {
-            this.value = valueMax;
-        } else {
-            this.value = newValue;
+            newValue = valueMax;
         }
-        refreshValuePosition();
+        model.setValueAt(Integer.toString(newValue), axisIndex, Kiviatt.VALUE_COLUMN);
     }
 
     private int getAxisSize() {
@@ -137,8 +135,7 @@ public class KiviattAxis extends JComponent {
         xPos = markValuePosition.x + (int) Math.round(Math.cos(Math.toRadians(angle - 90)) * SIZE_MARKS / 2);
         yPos = markValuePosition.y + (int) Math.round(Math.sin(Math.toRadians(angle - 90)) * SIZE_MARKS / 2);
         markPositions[1] = new Point(xPos, yPos);
-        System.out.println(Math.sin(Math.toRadians(angle - 90)) + "     " + Math.sin(Math.toRadians(angle + 90)));
-        System.out.println(angle + "   " + markPositions[0] + "     " + markPositions[1]);
+        
         return markPositions;
     }
 

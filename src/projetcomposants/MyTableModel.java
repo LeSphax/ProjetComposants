@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
 
 
 class MyTableModel extends AbstractTableModel {
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     
     Object donnees[][];
     String titres[];
@@ -38,8 +38,13 @@ class MyTableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable( int row, int col) {
-        return true;
+        if (col == Kiviatt.VALUE_COLUMN){
+            return true;
+        }
+        return false;
     }
+    
+    
     
     @Override
     public void setValueAt(Object value, int row, int col) {
